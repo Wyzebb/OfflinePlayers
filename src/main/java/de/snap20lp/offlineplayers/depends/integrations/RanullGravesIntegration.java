@@ -8,10 +8,12 @@ import de.snap20lp.offlineplayers.events.OfflinePlayerDeathEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -55,6 +57,8 @@ public class RanullGravesIntegration implements Listener {
         Grave grave = graveManager.createGrave(event.getOfflinePlayer().getCloneEntity(), drops);
         grave.setOwnerUUID(event.getOfflinePlayer().getOfflinePlayer().getUniqueId());
         grave.setOwnerName(event.getOfflinePlayer().getOfflinePlayer().getName());
+        grave.setTimeCreation(System.currentTimeMillis());
+        grave.setTimeAlive(System.currentTimeMillis() + 1000000);
         event.getOfflinePlayer().getSavedInventoryContents().clear();
         event.getOfflinePlayer().getAddedItems().clear();
         event.getOfflinePlayer().getSavedArmorContents().clear();
