@@ -35,7 +35,7 @@ import java.util.logging.Level;
  * @author Sugaku
  */
 public class CloneManager implements Listener { // todo: Perhaps refactor events into an event manager.
-
+    // todo: We will need a list of clones organized by username.
     /**
      * The active CloneManager instance.
      */

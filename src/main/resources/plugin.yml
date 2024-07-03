@@ -12,3 +12,14 @@ softdepend:
   - Multiverse-Inventories
   - DepartedDepot
   - WorldGuard
+commands:
+  offline-teleport:
+    description: "Command to allow for easier teleportation to offline players."
+    permission: "offline-players.teleport"
+permissions:
+  offline-players.*:
+    default: op
+    offline-players.admin:
+      default: op
+    offline-players.teleport:
+      default: op

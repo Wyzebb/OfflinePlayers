@@ -1,5 +1,6 @@
 package de.snap20lp.offlineplayers;
 
+import de.snap20lp.offlineplayers.commands.CloneTeleportCommand;
 import de.snap20lp.offlineplayers.depends.APIManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -56,6 +57,7 @@ public class OfflinePlayers extends JavaPlugin { // todo: Maybe create a config 
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+        new CloneTeleportCommand();
     }
 
     @Override
