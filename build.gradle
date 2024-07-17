@@ -34,6 +34,10 @@ repositories {
         name = "codemc-releases"
         url = "https://repo.codemc.io/repository/maven-releases/"
     }
+    maven {
+        name = "jeff-media-public"
+        url = "https://hub.jeff-media.com/nexus/repository/jeff-media-public/"
+    }
 }
 
 configurations {
@@ -45,6 +49,7 @@ dependencies {
     implementation 'LibsDisguises:LibsDisguises:10.0.44-SNAPSHOT'
     implementation 'com.github.retrooper.packetevents:spigot:2.3.0'
     implementation 'com.google.code.gson:gson:2.10.1'
+    compileOnly "de.jeff_media:AngelChestAPI:13.2.0-SNAPSHOT"
     compileOnly files('libs/Graves-4.9.1.6.jar')
     compileOnly 'com.palmergames.bukkit.towny:towny:0.100.1.18'
     compileOnly 'com.onarandombox.multiverseinventories:multiverse-inventories:4.2.5'

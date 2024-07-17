@@ -1,5 +1,6 @@
 package de.snap20lp.offlineplayers.depends;
 
+import de.snap20lp.offlineplayers.depends.integrations.AngelChestsIntegration;
 import de.snap20lp.offlineplayers.depends.integrations.DepartedDepotIntegration;
 import de.snap20lp.offlineplayers.OfflinePlayers;
 import de.snap20lp.offlineplayers.depends.integrations.RanullGravesIntegration;
@@ -62,7 +63,6 @@ public class APIManager {
      * Called when onEnable() is executed for OfflinePlayers.
      */
     public void delegatedOnEnabled () {
-        System.out.println("Warn me!");
         try {
             townyFacade = new TownyFacade();
         } catch (NoClassDefFoundError error) {
@@ -78,12 +78,18 @@ public class APIManager {
         try {
             Bukkit.getPluginManager().registerEvents(new DepartedDepotIntegration(), OfflinePlayers.getInstance());
         } catch (NoClassDefFoundError error1) {
-            OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Departed Depots not found. Attempting a graves fallback: Graves by Ranull.");
+            OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Departed Depots not found. Attempting a graves fallback: Angel Chest by mfnalex.");
             try {
-                Bukkit.getPluginManager().registerEvents(new RanullGravesIntegration(), OfflinePlayers.getInstance());
+                Bukkit.getPluginManager().registerEvents(new AngelChestsIntegration(), OfflinePlayers.getInstance());
             } catch (NoClassDefFoundError error2) {
-                OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Graves by Ranull not found. Plugin will run normally without graves.");
+                OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Angel Chest not found. Attempting a graves fallback: Graves by Ranull.");
+                try {
+                    Bukkit.getPluginManager().registerEvents(new RanullGravesIntegration(), OfflinePlayers.getInstance());
+                } catch (NoClassDefFoundError error3) {
+                    OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Graves by Ranull not found. Plugin will run normally without graves.");
+                }
             }
+
         }
     }
 

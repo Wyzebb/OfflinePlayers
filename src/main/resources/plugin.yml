@@ -9,8 +9,9 @@ main: de.snap20lp.offlineplayers.OfflinePlayers
 depend: [ "packetevents", "LibsDisguises" ]
 
 softdepend:
-  - Towny
-  - Multiverse-Inventories
-  - DepartedDepot
-  - WorldGuard
-  - Graves
+  - "Towny"
+  - "Multiverse-Inventories"
+  - "DepartedDepot"
+  - "WorldGuard"
+  - "Graves"
+  - "AngelChest"
