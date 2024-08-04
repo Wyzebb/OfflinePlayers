@@ -56,36 +56,42 @@ public class RanullGravesIntegration implements Listener {
             drops.add(i);
         for (ItemStack i : event.getOfflinePlayer().getSavedInventoryContents())
             drops.add(i);
-        if (drops.isEmpty()) return;
-        DataManager dataManager = ((Graves) Bukkit.getPluginManager().getPlugin("GravesX")).getDataManager();
-        Grave grave = graveManager.createGrave(event.getOfflinePlayer().getCloneEntity(), drops);
-        grave.setOwnerUUID(event.getOfflinePlayer().getOfflinePlayer().getUniqueId());
-        grave.setOwnerName(event.getOfflinePlayer().getOfflinePlayer().getPlayerProfile().getName());
-        grave.setOwnerNameDisplay(event.getOfflinePlayer().getOfflinePlayer().getPlayerProfile().getName());
-        grave.setTimeCreation(System.currentTimeMillis());
-        grave.setTimeAlive(OfflinePlayers.getInstance().getConfig().getLong("OfflinePlayer.graves.duration") * 1000);
-        grave.setLocationDeath(event.getOfflinePlayer().getCloneEntity().getLocation());
-        grave.setPermissionList(new ArrayList<>());
-        Player killer = event.getOfflinePlayer().getCloneEntity().getKiller();
-        if (killer != null) {
-            grave.setKillerName(killer.getName());
-            grave.setKillerType(EntityType.PLAYER);
-            grave.setKillerUUID(killer.getUniqueId());
-            grave.setKillerNameDisplay(killer.getDisplayName());
+        List<ItemStack> swap = new ArrayList<>();
+        for (ItemStack i : drops)
+            if (i != null)
+                if (!graveManager.shouldIgnoreItemStack(i, event.getOfflinePlayer().getCloneEntity(), new ArrayList<>()))
+                    swap.add(i);
+        if (!swap.isEmpty()) {
+            DataManager dataManager = ((Graves) Bukkit.getPluginManager().getPlugin("GravesX")).getDataManager();
+            Grave grave = graveManager.createGrave(event.getOfflinePlayer().getCloneEntity(), swap);
+            grave.setOwnerUUID(event.getOfflinePlayer().getOfflinePlayer().getUniqueId());
+            grave.setOwnerName(event.getOfflinePlayer().getOfflinePlayer().getPlayerProfile().getName());
+            grave.setOwnerNameDisplay(event.getOfflinePlayer().getOfflinePlayer().getPlayerProfile().getName());
+            grave.setTimeCreation(System.currentTimeMillis());
+            grave.setTimeAlive(OfflinePlayers.getInstance().getConfig().getLong("OfflinePlayer.graves.duration") * 1000);
+            grave.setLocationDeath(event.getOfflinePlayer().getCloneEntity().getLocation());
+            grave.setPermissionList(new ArrayList<>());
+            Player killer = event.getOfflinePlayer().getCloneEntity().getKiller();
+            if (killer != null) {
+                grave.setKillerName(killer.getName());
+                grave.setKillerType(EntityType.PLAYER);
+                grave.setKillerUUID(killer.getUniqueId());
+                grave.setKillerNameDisplay(killer.getDisplayName());
+            }
+            grave.setOwnerType(EntityType.PLAYER);
+            grave.setProtection(true);
+            grave.setTimeProtection(OfflinePlayers.getInstance().getConfig().getLong("OfflinePlayer.graves.protection-duration") * 1000);
+            grave.setYaw(0.0f);
+            grave.setPitch(grave.getLocationDeath().getPitch());
+            Map<EquipmentSlot, ItemStack> equipmentMap = new HashMap<>();
+            grave.setEquipmentMap(equipmentMap);
+            GraveCreateEvent createGrave = new GraveCreateEvent(event.getOfflinePlayer().getCloneEntity(), grave);
+            Bukkit.getPluginManager().callEvent(createGrave);
+            graveManager.placeGrave(event.getOfflinePlayer().getCloneEntity().getLocation(), grave);
+            dataManager.addGrave(grave);
         }
-        grave.setOwnerType(EntityType.PLAYER);
-        grave.setProtection(true);
-        grave.setTimeProtection(OfflinePlayers.getInstance().getConfig().getLong("OfflinePlayer.graves.protection-duration") * 1000);
-        grave.setYaw(0.0f);
-        grave.setPitch(grave.getLocationDeath().getPitch());
-        Map<EquipmentSlot, ItemStack> equipmentMap = new HashMap<>();
-        grave.setEquipmentMap(equipmentMap);
         event.getOfflinePlayer().getSavedInventoryContents().clear();
         event.getOfflinePlayer().getAddedItems().clear();
         event.getOfflinePlayer().getSavedArmorContents().clear();
-        GraveCreateEvent createGrave = new GraveCreateEvent(event.getOfflinePlayer().getCloneEntity(), grave);
-        Bukkit.getPluginManager().callEvent(createGrave);
-        graveManager.placeGrave(event.getOfflinePlayer().getCloneEntity().getLocation(), grave);
-        dataManager.addGrave(grave);
     }
 }
