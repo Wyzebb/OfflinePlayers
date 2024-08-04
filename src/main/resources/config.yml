@@ -41,3 +41,15 @@ OfflinePlayer:
     # Players in protected WorldGuard will be brought to their 'Bed Spawn > Towny Spawn > (Overworld: 'world') World Spawn'
     is-bed-enabled: true
     destination-world: 'world'
+
+  # These options are related to the graves spawned by OfflinePlayers. Graves are provided by supported plugins.
+  graves:
+    # Whether a specific provider plugin should be searched for.
+    providers:
+      departed-depot: true
+      angels-chest: true
+      gravesx: true
+    # This is the duration in seconds before OfflinePlayer graves expire. (GravesX)
+    duration: 7200
+    # Duration of grave protection. (GravesX)
+    protection-duration: 300

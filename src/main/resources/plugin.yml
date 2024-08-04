@@ -1,5 +1,5 @@
 name: OfflinePlayers
-version: 3.3.3
+version: 3.4.1
 authors:
   - snap20lp
   - Sugaku
@@ -13,5 +13,5 @@ softdepend:
   - "Multiverse-Inventories"
   - "DepartedDepot"
   - "WorldGuard"
-  - "Graves"
+  - "GravesX"
   - "AngelChest"

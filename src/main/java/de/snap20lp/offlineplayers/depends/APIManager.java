@@ -75,21 +75,26 @@ public class APIManager {
             multiverseInventoriesFacade = null;
             OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Multiverse Inventories not found. Plugin will run normally.");
         }
-        try {
-            Bukkit.getPluginManager().registerEvents(new DepartedDepotIntegration(), OfflinePlayers.getInstance());
-        } catch (NoClassDefFoundError error1) {
-            OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Departed Depots not found. Attempting a graves fallback: Angel Chest by mfnalex.");
+        if (OfflinePlayers.getInstance().getConfig().getBoolean("OfflinePlayer.graves.providers.departed-depot")) {
+            try {
+                Bukkit.getPluginManager().registerEvents(new DepartedDepotIntegration(), OfflinePlayers.getInstance());
+            } catch (NoClassDefFoundError error) {
+                OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Departed Depots not found.");
+            }
+        }
+        if (OfflinePlayers.getInstance().getConfig().getBoolean("OfflinePlayer.graves.providers.angels-chest")) {
             try {
                 Bukkit.getPluginManager().registerEvents(new AngelChestsIntegration(), OfflinePlayers.getInstance());
-            } catch (NoClassDefFoundError error2) {
-                OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Angel Chest not found. Attempting a graves fallback: Graves by Ranull.");
-                try {
-                    Bukkit.getPluginManager().registerEvents(new RanullGravesIntegration(), OfflinePlayers.getInstance());
-                } catch (NoClassDefFoundError error3) {
-                    OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Graves by Ranull not found. Plugin will run normally without graves.");
-                }
+            } catch (NoClassDefFoundError error) {
+                OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Angel Chest not found.");
             }
-
+        }
+        if (OfflinePlayers.getInstance().getConfig().getBoolean("OfflinePlayer.graves.providers.gravesx")) {
+            try {
+                Bukkit.getPluginManager().registerEvents(new RanullGravesIntegration(), OfflinePlayers.getInstance());
+            } catch (NoClassDefFoundError error) {
+                OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "GravesX not found.");
+            }
         }
     }
 
