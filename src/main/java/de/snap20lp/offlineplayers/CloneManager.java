@@ -51,6 +51,11 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
     private final List<String> deathFlavours;
 
     /**
+     * A long that stores the latest time clone data was saved in a millis since epoch.
+     */
+    private long lastCloneDataUpdate = System.currentTimeMillis();
+
+    /**
      * Creates a new CloneManager by loading, if present, persistent clones from the drive.
      */
     public CloneManager () { // todo: Might be cleaner to use a custom constructor.
@@ -107,6 +112,14 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
     }
 
     /**
+     * Saves all the current clones to the disc asynchronously.
+     */
+    public void saveAsync () {
+        lastCloneDataUpdate = System.currentTimeMillis();
+        Bukkit.getScheduler().runTaskAsynchronously(OfflinePlayers.getInstance(), this::save);
+    }
+
+    /**
      * Saves all current clones to the disk.
      */
     public void save () { // Todo: Might be cleaner to make each save themselves.
@@ -129,6 +142,7 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
             save.set(uuid + ".is-dead", player.isDead());
         }
         try {
+            if (lastCloneDataUpdate > System.currentTimeMillis()) return;
             save.save("./plugins/OfflinePlayers/clones.yml");
         } catch (IOException ioException) {
             OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Failed to save clone data:" + ioException.getMessage());
@@ -164,7 +178,7 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
 
             offlinePlayerList.put(newOfflinePlayer.getOfflinePlayer().getUniqueId(), newOfflinePlayer);
             entityOfflinePlayerHashMap.put(newOfflinePlayer.getCloneEntity().getEntityId(), newOfflinePlayer);
-
+            saveAsync();
         }
     }
 
@@ -220,6 +234,7 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
             clone.despawnClone();
 
             offlinePlayerList.remove(playerJoinEvent.getPlayer().getUniqueId());
+            saveAsync();
         }
     }
 
@@ -257,6 +272,7 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
         offlinePlayer.startTimers();
         offlinePlayerList.put(quitPlayer.getUniqueId(), offlinePlayer);
         entityOfflinePlayerHashMap.put(offlinePlayer.getCloneEntity().getEntityId(), offlinePlayer);
+        saveAsync();
     }
 
     @EventHandler // todo: Figure out why this method existed. It seems relatively vestigial to me currently.
@@ -282,7 +298,7 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
                         offlinePlayer.getAddedItems().add(event.getItemDrop().getItemStack());
                         offlinePlayer.getCloneEntity().getWorld().playSound(offlinePlayer.getCloneEntity().getLocation(), Sound.ENTITY_ITEM_PICKUP, 100,2);
                         event.getItemDrop().remove();
-
+                        saveAsync();
                     }, 50L);
                 }
             });
@@ -356,6 +372,7 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
             offlinePlayer.setHidden(true);
             offlinePlayer.despawnClone();
             offlinePlayer.setDead(true);
+            saveAsync();
         }
     }
 
