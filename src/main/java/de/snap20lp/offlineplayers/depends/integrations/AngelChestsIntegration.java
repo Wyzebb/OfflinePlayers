@@ -2,14 +2,19 @@ package de.snap20lp.offlineplayers.depends.integrations;
 
 import de.jeff_media.angelchest.AngelChestBuilder;
 import de.jeff_media.angelchest.AngelChestPlugin;
+import de.jeff_media.angelchest.DeathReason;
 import de.snap20lp.offlineplayers.OfflinePlayers;
 import de.snap20lp.offlineplayers.events.OfflinePlayerDeathEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -50,8 +55,28 @@ public class AngelChestsIntegration implements Listener {
                 event.getOfflinePlayer().getCloneEntity().getLocation().getBlock());
         List<ItemStack> storage = event.getOfflinePlayer().getSavedInventoryContents();
         storage.addAll(event.getOfflinePlayer().getAddedItems());
+        if (storage.size() > 36) {
+            storage = new ArrayList<>();
+            while (storage.size() < 36)
+                storage.add(event.getOfflinePlayer().getSavedInventoryContents().get(storage.size()));
+        }
+        while (storage.size() < 36)
+            storage.add(new ItemStack(Material.AIR));
         builder.storageInv(storage.toArray(new ItemStack[0]));
         List<ItemStack> armor = event.getOfflinePlayer().getSavedArmorContents();
-        builder.armorInv(armor.toArray(new ItemStack[0]));
+        builder.armorInv(armor.toArray(new ItemStack[4]));
+        builder.secondsLeft(OfflinePlayers.getInstance().getConfig().getInt("OfflinePlayer.graves.duration"));
+        builder.unlockIn(OfflinePlayers.getInstance().getConfig().getInt("OfflinePlayer.graves.protection-duration"));
+        Player killer = event.getOfflinePlayer().getCloneEntity().getKiller();
+        String killerName = "Environment";
+        if (killer != null)
+            killerName = killer.getName();
+        builder.deathReason(new DeathReason(EntityDamageEvent.DamageCause.ENTITY_ATTACK, killerName));
+        builder.ownerName(bukkitOffline.getName());
+        builder.experience(event.getOfflinePlayer().getPlayerExp());
+        event.getOfflinePlayer().getSavedInventoryContents().clear();
+        event.getOfflinePlayer().getSavedArmorContents().clear();
+        event.getOfflinePlayer().getAddedItems().clear();
+        angelChestPlugin.createAngelChest(builder);
     }
 }

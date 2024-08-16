@@ -49,7 +49,7 @@ OfflinePlayer:
       departed-depot: true
       angels-chest: true
       gravesx: true
-    # This is the duration in seconds before OfflinePlayer graves expire. (GravesX)
-    duration: 7200
-    # Duration of grave protection. (GravesX)
-    protection-duration: 300
+    # This is the duration in seconds before OfflinePlayer graves expire. (GravesX, AngelChest)
+    duration: 600
+    # Duration of grave protection. (GravesX, AngelChest)
+    protection-duration: 0
