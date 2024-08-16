@@ -50,8 +50,8 @@ public class AngelChestsIntegration implements Listener {
                 event.getOfflinePlayer().getCloneEntity().getLocation().getBlock());
         List<ItemStack> storage = event.getOfflinePlayer().getSavedInventoryContents();
         storage.addAll(event.getOfflinePlayer().getAddedItems());
-        builder.storageInv(storage.toArray(new ItemStack[0]));
+        builder.storageInv(storage.toArray(new ItemStack[36]));
         List<ItemStack> armor = event.getOfflinePlayer().getSavedArmorContents();
-        builder.armorInv(armor.toArray(new ItemStack[0]));
+        builder.armorInv(armor.toArray(new ItemStack[4]));
     }
 }

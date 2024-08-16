@@ -274,7 +274,7 @@ public class OfflinePlayer implements Listener {
             clone.setSilent(true);
 
             ((LivingEntity) clone).setAI(cloneHasAI);
-            if (cloneHasAI) ((LivingEntity) clone).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, false, false, false));
+            if (cloneHasAI) ((LivingEntity) clone).addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, 255, false, false, false));
             clone.setGravity(true);
             ((LivingEntity) clone).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(cloneEntity == null ? currentHP : cloneEntity.getHealth());
             ((LivingEntity) clone).setHealth(cloneEntity == null ? currentHP : cloneEntity.getHealth());

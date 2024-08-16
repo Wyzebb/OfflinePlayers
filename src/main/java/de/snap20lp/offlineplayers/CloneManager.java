@@ -204,8 +204,8 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
 
 //            player.getInventory().setItemInMainHand(clone.getCloneEntity().getEquipment().getItemInMainHand());
             player.getInventory().setItemInOffHand(clone.getCloneEntity().getEquipment().getItemInOffHand());
-            if (clone.getCloneEntity().hasPotionEffect(PotionEffectType.SLOW) && clone.isCloneHasAI()) {
-                player.removePotionEffect(PotionEffectType.SLOW);
+            if (clone.getCloneEntity().hasPotionEffect(PotionEffectType.SLOWNESS) && clone.isCloneHasAI()) {
+                player.removePotionEffect(PotionEffectType.SLOWNESS);
             }
             if (clone.isDead()) {
                 if (!OfflinePlayers.getInstance().getConfig().getBoolean("OfflinePlayer.cloneKeepItems")) {
