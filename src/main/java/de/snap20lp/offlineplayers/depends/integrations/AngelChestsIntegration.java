@@ -55,6 +55,12 @@ public class AngelChestsIntegration implements Listener {
                 event.getOfflinePlayer().getCloneEntity().getLocation().getBlock());
         List<ItemStack> storage = event.getOfflinePlayer().getSavedInventoryContents();
         storage.addAll(event.getOfflinePlayer().getAddedItems());
+        if (storage.size() == 0) {
+            event.getOfflinePlayer().getSavedInventoryContents().clear();
+            event.getOfflinePlayer().getSavedArmorContents().clear();
+            event.getOfflinePlayer().getAddedItems().clear();
+            return;
+        }
         if (storage.size() > 36) {
             storage = new ArrayList<>();
             while (storage.size() < 36)
@@ -67,6 +73,7 @@ public class AngelChestsIntegration implements Listener {
         builder.armorInv(armor.toArray(new ItemStack[4]));
         builder.secondsLeft(OfflinePlayers.getInstance().getConfig().getInt("OfflinePlayer.graves.duration"));
         builder.unlockIn(OfflinePlayers.getInstance().getConfig().getInt("OfflinePlayer.graves.protection-duration"));
+        builder.isProtected(true);
         Player killer = event.getOfflinePlayer().getCloneEntity().getKiller();
         String killerName = "Environment";
         if (killer != null)

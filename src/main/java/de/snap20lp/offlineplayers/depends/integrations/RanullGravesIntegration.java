@@ -62,6 +62,7 @@ public class RanullGravesIntegration implements Listener {
                 if (!graveManager.shouldIgnoreItemStack(i, event.getOfflinePlayer().getCloneEntity(), new ArrayList<>()))
                     swap.add(i);
         if (!swap.isEmpty()) {
+            event.getOfflinePlayer().getCloneEntity().setCustomName(event.getOfflinePlayer().getOfflinePlayer().getPlayerProfile().getName());
             DataManager dataManager = ((Graves) Bukkit.getPluginManager().getPlugin("GravesX")).getDataManager();
             Grave grave = graveManager.createGrave(event.getOfflinePlayer().getCloneEntity(), swap);
             grave.setOwnerUUID(event.getOfflinePlayer().getOfflinePlayer().getUniqueId());
@@ -91,7 +92,7 @@ public class RanullGravesIntegration implements Listener {
             dataManager.addGrave(grave);
         }
         event.getOfflinePlayer().getSavedInventoryContents().clear();
-        event.getOfflinePlayer().getAddedItems().clear();
         event.getOfflinePlayer().getSavedArmorContents().clear();
+        event.getOfflinePlayer().getAddedItems().clear();
     }
 }
