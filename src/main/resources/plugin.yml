@@ -15,3 +15,13 @@ softdepend:
   - "WorldGuard"
   - "GravesX"
   - "AngelChest"
+
+commands:
+  offline-player:
+    permission: offline-player.admin
+    permission-message: "Unknown command. Please type \"help\" for help."
+permissions:
+  offline-player.*:
+    default: op
+    offline-player.admin:
+      default: op
