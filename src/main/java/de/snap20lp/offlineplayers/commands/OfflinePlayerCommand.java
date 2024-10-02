@@ -34,7 +34,10 @@ public class OfflinePlayerCommand extends BetterCommand {
     private void updateOfflinePlayers () {
         Map<UUID, OfflinePlayer> players = CloneManager.getInstance().getOfflinePlayerList();
         offlinePlayers.clear();
-        players.forEach((u, p) -> offlinePlayers.put(p.getOfflinePlayer().getName(), p));
+        players.forEach((u, p) -> {
+            if (p.isDead()) return;
+            offlinePlayers.put(p.getOfflinePlayer().getName(), p);
+        });
     }
 
     /**
