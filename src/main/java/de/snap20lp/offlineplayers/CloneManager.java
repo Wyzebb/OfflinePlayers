@@ -116,13 +116,21 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
      */
     public void saveAsync () {
         lastCloneDataUpdate = System.currentTimeMillis();
-        Bukkit.getScheduler().runTaskAsynchronously(OfflinePlayers.getInstance(), this::save);
+//        Bukkit.getScheduler().runTaskAsynchronously(OfflinePlayers.getInstance(), this::save);
     }
 
     /**
      * Saves all current clones to the disk.
      */
-    public void save () { // Todo: Might be cleaner to make each save themselves.
+    public void save () {
+        save("./plugins/OfflinePlayers/clones.yml");
+    }
+
+    /**
+     * Saves all current clones to the disk.
+     */
+    public void save (String path) { // Todo: Might be cleaner to make each save themselves.
+        long dataGrabbed = System.currentTimeMillis();
         FileConfiguration save = new YamlConfiguration();
         for (UUID s : getOfflinePlayerList().keySet()) {
             String uuid = s.toString();
@@ -142,11 +150,14 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
             save.set(uuid + ".is-dead", player.isDead());
         }
         try {
-            if (lastCloneDataUpdate > System.currentTimeMillis()) return;
-            save.save("./plugins/OfflinePlayers/clones.yml");
+//            if (lastCloneDataUpdate > dataGrabbed) return;
+            save.save(path);
+            OfflinePlayers.getInstance().getLogger().log(Level.INFO, "Saved clone data.");
         } catch (IOException ioException) {
             OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Failed to save clone data:" + ioException.getMessage());
         }
+        if (OfflinePlayers.getInstance().isEnabled())
+            Bukkit.getScheduler().runTaskLaterAsynchronously(OfflinePlayers.getInstance(), () -> CloneManager.getInstance().save(), 60 * 20 * 10);
     }
 
     @EventHandler
@@ -372,6 +383,9 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
             offlinePlayer.setHidden(true);
             offlinePlayer.despawnClone();
             offlinePlayer.setDead(true);
+            final OfflinePlayer staticOffline = offlinePlayer;
+            Bukkit.getScheduler().runTask(OfflinePlayers.getInstance(),
+                    () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "clear " + staticOffline.getOfflinePlayer().getName()));
             saveAsync();
         }
     }

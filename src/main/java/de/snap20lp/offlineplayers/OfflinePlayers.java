@@ -58,6 +58,7 @@ public class OfflinePlayers extends JavaPlugin { // todo: Maybe create a config 
             return;
         }
         new OfflinePlayerCommand();
+        Bukkit.getScheduler().runTaskLaterAsynchronously(this, () -> CloneManager.getInstance().save(), 60 * 20 * 10);
     }
 
     @Override

@@ -7,6 +7,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.text.DateFormat;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -73,6 +75,10 @@ public class OfflinePlayerCommand extends BetterCommand {
         else if (!player.hasPermission("offline-player.admin")) return true;
         switch (args[0].toLowerCase()) {
             case "tp" -> teleportSubcommand(player, args);
+            case "backup" -> {
+                send(player, ChatColor.GREEN + "Creating backup!");
+                CloneManager.getInstance().save("./plugins/OfflinePlayers/clones - " + DateFormat.getDateTimeInstance().format(Date.from(Instant.now())) + ".bak" );
+            }
         }
         return true;
     }
@@ -89,6 +95,10 @@ public class OfflinePlayerCommand extends BetterCommand {
         else if (!sender.hasPermission("offline-player.admin")) return true;
         switch (args[0]) {
             case "tp" -> send(sender, ChatColor.RED + "Teleporting to offline players can only be done by a player.");
+            case "backup" -> {
+                send(sender, ChatColor.GREEN + "Creating backup!");
+                CloneManager.getInstance().save("./plugins/OfflinePlayers/clones - " + DateFormat.getDateTimeInstance().format(Date.from(Instant.now())) + ".bak" );
+            }
         }
         return true;
     }
@@ -109,7 +119,7 @@ public class OfflinePlayerCommand extends BetterCommand {
                 return everythingStartsWith(toReturn, args[1]);
             }
         } else if (args.length <= 1) {
-            toReturn.add("tp");
+            toReturn.addAll(Arrays.asList("tp", "backup"));
             return everythingStartsWith(toReturn, args[0]);
         }
         return List.of();

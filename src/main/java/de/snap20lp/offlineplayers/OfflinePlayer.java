@@ -67,7 +67,7 @@ public class OfflinePlayer implements Listener {
         this.playerExp = player.getTotalExperience();
         this.currentHP = player.getHealth();
         String customName = OfflinePlayers.getInstance().getConfig().getString("OfflinePlayer.cloneName");
-        customName = customName.replaceAll("%PLAYER_NAME", player.getName());
+        customName = customName.replaceAll("%PLAYER_NAME%", player.getName());
         customName = customName.replaceAll("%DESPAWN_TIMER%", String.valueOf(despawnTimerSeconds - currentSeconds));
         this.customName = customName;
 //        spawnClone();
@@ -88,7 +88,7 @@ public class OfflinePlayer implements Listener {
         if (currentHP <= 0) isDead = true;
         this.currentSeconds = currentSeconds;
         String customName = OfflinePlayers.getInstance().getConfig().getString("OfflinePlayer.cloneName");
-        customName = customName.replaceAll("%PLAYER_NAME", player.getName());
+        customName = customName.replaceAll("%PLAYER_NAME%", player.getName());
         customName = customName.replaceAll("%DESPAWN_TIMER%", String.valueOf(despawnTimerSeconds - currentSeconds));
         this.customName = customName;
         spawnClone();
@@ -228,7 +228,7 @@ public class OfflinePlayer implements Listener {
                     currentSeconds++;
                     if (cloneEntity.isValid()) {
                         String customName = OfflinePlayers.getInstance().getConfig().getString("OfflinePlayer.cloneName");
-                        customName = customName.replaceAll("%PLAYER_NAME", offlinePlayer.getName());
+                        customName = customName.replaceAll("%PLAYER_NAME%", offlinePlayer.getName());
                         customName = customName.replaceAll("%DESPAWN_TIMER%", String.valueOf(despawnTimerSeconds - currentSeconds));
                         cloneEntity.setCustomName(customName);
                         disguisedEntity.getWatcher().setCustomName(customName);

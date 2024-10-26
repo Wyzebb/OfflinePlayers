@@ -50,7 +50,7 @@ dependencies {
     implementation 'com.github.retrooper.packetevents:spigot:2.3.0'
     implementation 'com.google.code.gson:gson:2.10.1'
     compileOnly "de.jeff_media:AngelChestAPI:13.6.0"
-    compileOnly files('libs/Graves-4.9.1.6.jar')
+    compileOnly files('libs/GravesX-4.9.4.5.jar')
     compileOnly 'com.palmergames.bukkit.towny:towny:0.100.1.18'
     compileOnly 'com.onarandombox.multiverseinventories:multiverse-inventories:4.2.5'
     compileOnly 'com.onarandombox.multiversecore:multiverse-core:4.3.12'
