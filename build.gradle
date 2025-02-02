@@ -13,7 +13,9 @@ repositories {
     maven {
         url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots"
     }
-
+    maven {
+        url 'https://nexus.scarsz.me/content/groups/public/'
+    }
     maven {
         url = "https://oss.sonatype.org/content/repositories/snapshots/"
     }
@@ -34,10 +36,10 @@ repositories {
         name = "codemc-releases"
         url = "https://repo.codemc.io/repository/maven-releases/"
     }
-    maven {
-        name = "jeff-media-public"
-        url = "https://hub.jeff-media.com/nexus/repository/jeff-media-public/"
-    }
+//    maven {
+//        name = "jeff-media-public"
+//        url = "https://hub.jeff-media.com/nexus/repository/jeff-media-public/"
+//    }
 }
 
 configurations {
@@ -49,7 +51,8 @@ dependencies {
     implementation 'LibsDisguises:LibsDisguises:10.0.44-SNAPSHOT'
     implementation 'com.github.retrooper.packetevents:spigot:2.3.0'
     implementation 'com.google.code.gson:gson:2.10.1'
-    compileOnly "de.jeff_media:AngelChestAPI:13.6.0"
+    compileOnly 'com.discordsrv:discordsrv:1.28.0'
+//    compileOnly "de.jeff_media:AngelChestAPI:13.6.0"
     compileOnly files('libs/GravesX-4.9.4.5.jar')
     compileOnly 'com.palmergames.bukkit.towny:towny:0.100.1.18'
     compileOnly 'com.onarandombox.multiverseinventories:multiverse-inventories:4.2.5'

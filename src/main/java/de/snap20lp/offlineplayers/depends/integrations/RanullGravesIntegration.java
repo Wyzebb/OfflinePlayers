@@ -76,7 +76,9 @@ public class RanullGravesIntegration implements Listener {
                 null,
                 swap,
                 0,
-                OfflinePlayers.getInstance().getConfig().getLong("OfflinePlayer.graves.duration") * 1000);
+                OfflinePlayers.getInstance().getConfig().getLong("OfflinePlayer.graves.duration") * 1000,
+                    true,
+                    OfflinePlayers.getInstance().getConfig().getLong("OfflinePlayer.graves.protection-duration") * 1000);
 //            event.getOfflinePlayer().getCloneEntity().setCustomName(event.getOfflinePlayer().getOfflinePlayer().getPlayerProfile().getName());
 //            DataManager dataManager = ((Graves) Bukkit.getPluginManager().getPlugin("GravesX")).getDataManager();
 //            Grave grave = graveManager.createGrave(event.getOfflinePlayer().getCloneEntity(), swap);

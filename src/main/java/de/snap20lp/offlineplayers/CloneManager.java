@@ -4,6 +4,12 @@ import de.snap20lp.offlineplayers.events.OfflinePlayerDeathEvent;
 import de.snap20lp.offlineplayers.events.OfflinePlayerDespawnEvent;
 import de.snap20lp.offlineplayers.events.OfflinePlayerHitEvent;
 import de.snap20lp.offlineplayers.events.OfflinePlayerSpawnEvent;
+import github.scarsz.discordsrv.DiscordSRV;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.User;
+import github.scarsz.discordsrv.objects.managers.AccountLinkManager;
+import github.scarsz.discordsrv.util.DiscordUtil;
 import me.libraryaddict.disguise.events.UndisguiseEvent;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -372,12 +378,27 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
 
             }
             Player killer = event.getEntity().getKiller();
+            AccountLinkManager manager = DiscordSRV.getPlugin().getAccountLinkManager();
+            String discordId = manager.getDiscordId(offlinePlayer.getOfflinePlayer().getUniqueId());
+            Member guildMember = null;
+            if (discordId != null) {
+                Guild mainGuild = DiscordSRV.getPlugin().getMainGuild();
+                guildMember = mainGuild.getMemberById(discordId);
+            }
             if (killer != null) {
                 Random rand = new Random();
-                String message = deathFlavours.get(rand.nextInt(deathFlavours.size()));
-                Bukkit.broadcastMessage(ChatColor.RED + "@" + offlinePlayer.getOfflinePlayer().getName()  + message + "@" + killer.getName());
+                String deathMessage = "@" + offlinePlayer.getOfflinePlayer().getName()
+                        + deathFlavours.get(rand.nextInt(deathFlavours.size()))
+                        + "@" + killer.getName();
+                Bukkit.broadcastMessage(ChatColor.RED + deathMessage);
+                if (guildMember != null)
+                    DiscordUtil.privateMessage(guildMember.getUser(), deathMessage);
             } else {
-                Bukkit.broadcastMessage(ChatColor.RED + "@" + offlinePlayer.getOfflinePlayer().getName() + " has died at " + humanReadableLocation(event.getEntity().getLocation()) + ".");
+                String deathMessage = "@" + offlinePlayer.getOfflinePlayer().getName()
+                        + " has died at " + humanReadableLocation(event.getEntity().getLocation()) + ".";
+                Bukkit.broadcastMessage(ChatColor.RED + deathMessage);
+                if (guildMember != null)
+                    DiscordUtil.privateMessage(guildMember.getUser(), deathMessage);
             }
             event.setDroppedExp(offlinePlayer.getPlayerExp());
             offlinePlayer.setHidden(true);
