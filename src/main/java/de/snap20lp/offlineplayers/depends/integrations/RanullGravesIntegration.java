@@ -9,6 +9,7 @@ import de.snap20lp.offlineplayers.OfflinePlayers;
 import de.snap20lp.offlineplayers.events.OfflinePlayerDeathEvent;
 import dev.cwhead.GravesX.GravesXAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -66,10 +67,12 @@ public class RanullGravesIntegration implements Listener {
                 }
             }
         if (!swap.isEmpty()) {
+            OfflinePlayer offlinePlayer = event.getOfflinePlayer().getOfflinePlayer();
             LivingEntity victim = event.getOfflinePlayer().getCloneEntity();
             victim.setCustomName(event.getOfflinePlayer().getOfflinePlayer().getName());
             GravesXAPI api = new GravesXAPI((Graves) Bukkit.getPluginManager().getPlugin("GravesX"));
-            api.createGrave(victim,
+            SpoofedPlayer spoof = new SpoofedPlayer(offlinePlayer.getName(), offlinePlayer.getUniqueId(), victim.getLocation(), victim);
+            api.createGrave(spoof,
                 victim.getKiller(),
                 victim.getKiller() != null ? victim.getKiller().getType() : null,
                 victim.getLocation(),
