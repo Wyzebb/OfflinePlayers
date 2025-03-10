@@ -46,9 +46,7 @@ OfflinePlayer:
   graves:
     # Whether a specific provider plugin should be searched for.
     providers:
-      departed-depot: true
       angels-chest: true
-      gravesx: true
     # This is the duration in seconds before OfflinePlayer graves expire. (GravesX, AngelChest)
     duration: 600
     # Duration of grave protection. (GravesX, AngelChest)

@@ -1,9 +1,7 @@
 package de.snap20lp.offlineplayers.depends;
 
 import de.snap20lp.offlineplayers.depends.integrations.AngelChestsIntegration;
-import de.snap20lp.offlineplayers.depends.integrations.DepartedDepotIntegration;
 import de.snap20lp.offlineplayers.OfflinePlayers;
-import de.snap20lp.offlineplayers.depends.integrations.RanullGravesIntegration;
 import org.bukkit.Bukkit;
 
 import javax.annotation.Nullable;
@@ -75,25 +73,11 @@ public class APIManager {
             multiverseInventoriesFacade = null;
             OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Multiverse Inventories not found. Plugin will run normally.");
         }
-        if (OfflinePlayers.getInstance().getConfig().getBoolean("OfflinePlayer.graves.providers.departed-depot")) {
-            try {
-                Bukkit.getPluginManager().registerEvents(new DepartedDepotIntegration(), OfflinePlayers.getInstance());
-            } catch (NoClassDefFoundError error) {
-                OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Departed Depots not found.");
-            }
-        }
         if (OfflinePlayers.getInstance().getConfig().getBoolean("OfflinePlayer.graves.providers.angels-chest")) {
             try {
                 Bukkit.getPluginManager().registerEvents(new AngelChestsIntegration(), OfflinePlayers.getInstance());
             } catch (NoClassDefFoundError error) {
                 OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Angel Chest not found.");
-            }
-        }
-        if (OfflinePlayers.getInstance().getConfig().getBoolean("OfflinePlayer.graves.providers.gravesx")) {
-            try {
-                Bukkit.getPluginManager().registerEvents(new RanullGravesIntegration(), OfflinePlayers.getInstance());
-            } catch (NoClassDefFoundError error) {
-                OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "GravesX not found.");
             }
         }
     }
