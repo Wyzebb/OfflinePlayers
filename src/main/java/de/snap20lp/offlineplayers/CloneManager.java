@@ -7,7 +7,6 @@ import de.snap20lp.offlineplayers.events.OfflinePlayerSpawnEvent;
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
-import github.scarsz.discordsrv.dependencies.jda.api.entities.User;
 import github.scarsz.discordsrv.objects.managers.AccountLinkManager;
 import github.scarsz.discordsrv.util.DiscordUtil;
 import me.libraryaddict.disguise.events.UndisguiseEvent;
@@ -145,9 +144,18 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
             save.set(uuid + ".location", player.getCloneEntity().getLocation());
             save.set(uuid + ".player-xp", player.getPlayerExp());
             save.set(uuid + ".hp", player.getCurrentHP());
+
             ArrayList<ItemStack> inventory = player.getSavedInventoryContents();
+
+            if (inventory.size() > 36) {
+                inventory = new ArrayList<>();
+                while (inventory.size() < 36)
+                    inventory.add(player.getSavedInventoryContents().get(inventory.size()));
+            }
+
             for (ItemStack i : inventory)
-                save.set(uuid + ".inventory." + inventory.indexOf(i), i);
+                if (inventory.indexOf(i) < 36) save.set(uuid + ".inventory." + inventory.indexOf(i), i);
+
             ArrayList<ItemStack> armor = player.getSavedArmorContents();
             for (ItemStack i : armor)
                 save.set(uuid + ".armor." + armor.indexOf(i), i);
@@ -386,19 +394,21 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
                 guildMember = mainGuild.getMemberById(discordId);
             }
             if (killer != null) {
-                Random rand = new Random();
-                String deathMessage = "@" + offlinePlayer.getOfflinePlayer().getName()
-                        + deathFlavours.get(rand.nextInt(deathFlavours.size()))
-                        + "@" + killer.getName();
+                String personalDeathMessage = "You (" + offlinePlayer.getOfflinePlayer().getName() + ") were just killed by "
+                        + killer.getName() + "!";
+                String deathMessage = "Offline Player " + offlinePlayer.getOfflinePlayer().getName() + " was killed by "
+                        + killer.getName() + "!";
                 Bukkit.broadcastMessage(ChatColor.RED + deathMessage);
                 if (guildMember != null)
-                    DiscordUtil.privateMessage(guildMember.getUser(), deathMessage);
+                    DiscordUtil.privateMessage(guildMember.getUser(), personalDeathMessage);
             } else {
-                String deathMessage = "@" + offlinePlayer.getOfflinePlayer().getName()
-                        + " has died at " + humanReadableLocation(event.getEntity().getLocation()) + ".";
+                String personalDeathMessage = "You (" + offlinePlayer.getOfflinePlayer().getName()
+                        + ") have died at " + humanReadableLocation(event.getEntity().getLocation()) + "!";
+                String deathMessage = "Offline Player " + offlinePlayer.getOfflinePlayer().getName()
+                        + " died at " + humanReadableLocation(event.getEntity().getLocation()) + "!";
                 Bukkit.broadcastMessage(ChatColor.RED + deathMessage);
                 if (guildMember != null)
-                    DiscordUtil.privateMessage(guildMember.getUser(), deathMessage);
+                    DiscordUtil.privateMessage(guildMember.getUser(), personalDeathMessage);
             }
             event.setDroppedExp(offlinePlayer.getPlayerExp());
             offlinePlayer.setHidden(true);
