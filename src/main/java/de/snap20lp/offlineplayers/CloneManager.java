@@ -394,18 +394,26 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
                 guildMember = mainGuild.getMemberById(discordId);
             }
             if (killer != null) {
-                String personalDeathMessage = "You (" + offlinePlayer.getOfflinePlayer().getName() + ") were just killed by "
-                        + killer.getName() + "!";
-                String deathMessage = "Offline Player " + offlinePlayer.getOfflinePlayer().getName() + " was killed by "
-                        + killer.getName() + "!";
+                String personalDeathMessage = OfflinePlayers.getInstance().getConfig().getString("OfflinePlayer.death-messages.personal", "You ({killed}) were just killed by {killer}!");
+                personalDeathMessage = personalDeathMessage.replace("{killed}", offlinePlayer.getOfflinePlayer().getName());
+                personalDeathMessage = personalDeathMessage.replace("{killer}", killer.getName());
+
+                String deathMessage = OfflinePlayers.getInstance().getConfig().getString("OfflinePlayer.death-messages.general", "Offline Player {killed} was killed by {killer}!");
+                deathMessage = deathMessage.replace("{killed}", offlinePlayer.getOfflinePlayer().getName());
+                deathMessage = deathMessage.replace("{killer}", killer.getName());
+
                 Bukkit.broadcastMessage(ChatColor.RED + deathMessage);
                 if (guildMember != null)
                     DiscordUtil.privateMessage(guildMember.getUser(), personalDeathMessage);
             } else {
-                String personalDeathMessage = "You (" + offlinePlayer.getOfflinePlayer().getName()
-                        + ") have died at " + humanReadableLocation(event.getEntity().getLocation()) + "!";
-                String deathMessage = "Offline Player " + offlinePlayer.getOfflinePlayer().getName()
-                        + " died at " + humanReadableLocation(event.getEntity().getLocation()) + "!";
+                String personalDeathMessage = OfflinePlayers.getInstance().getConfig().getString("OfflinePlayer.death-messages.personal-loc", "You ({killed}) just died at {loc}!");
+                personalDeathMessage = personalDeathMessage.replace("{killed}", offlinePlayer.getOfflinePlayer().getName());
+                personalDeathMessage = personalDeathMessage.replace("{loc}", humanReadableLocation(event.getEntity().getLocation()));
+
+                String deathMessage = OfflinePlayers.getInstance().getConfig().getString("OfflinePlayer.death-messages.general-loc", "Offline Player {killed} died at {loc}!");
+                deathMessage = deathMessage.replace("{killed}", offlinePlayer.getOfflinePlayer().getName());
+                deathMessage = deathMessage.replace("{loc}", humanReadableLocation(event.getEntity().getLocation()));
+
                 Bukkit.broadcastMessage(ChatColor.RED + deathMessage);
                 if (guildMember != null)
                     DiscordUtil.privateMessage(guildMember.getUser(), personalDeathMessage);
