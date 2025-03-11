@@ -17,6 +17,11 @@ OfflinePlayer:
   cloneHasAI: true #If true the clone is able to be fall down, pushed or knocked back.
   cloneCanProvoke: true #If true the clone can be targeted by mobs.
   cloneName: "§8§lOffline §7- §c%PLAYER_NAME% §e%DESPAWN_TIMER%" #The name of the clone. %PLAYER_NAME will be replaced with the name of the player. %DESPAWN_TIMER% will be replaced with the time until the clone despawns.
+  death-messages:
+    personal: "You ({killed}) were just killed by {killer}!"
+    general: "Offline Player {killed} was killed by {killer}!"
+    personal-loc: "You ({killed}) just died at {loc}!"
+    general-loc: "Offline Player {killed} died at {loc}!"
   cloneDe-spawnTimer:
     enabled: false
     timer: 20 #The time in seconds the clone is de-spawned after it is spawned.
