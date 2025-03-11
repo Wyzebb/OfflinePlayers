@@ -40,6 +40,9 @@ repositories {
         name = "jeff-media-public"
         url = "https://repo.jeff-media.com/public/"
     }
+    maven {
+        url = uri("https://api.modrinth.com/maven")
+    }
 }
 
 configurations {
@@ -58,6 +61,7 @@ dependencies {
     compileOnly 'com.onarandombox.multiverseinventories:multiverse-inventories:4.2.5'
     compileOnly 'com.onarandombox.multiversecore:multiverse-core:4.3.12'
     compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0'
+    compileOnly("maven.modrinth:pl3xmap:1.21-500")
 }
 
 test {
