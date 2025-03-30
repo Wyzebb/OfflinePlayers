@@ -3,6 +3,7 @@ version: 3.6.1
 authors:
   - snap20lp
   - Sugaku
+  - Wyzebb
 api-version: 1.13
 main: de.snap20lp.offlineplayers.OfflinePlayers
 
