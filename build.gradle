@@ -68,7 +68,7 @@ test {
     useJUnitPlatform()
 }
 
-task testServer () {
+tasks.register('testServer') {
     onlyIf = { true } // Always run.
     dependsOn ":build"
     mustRunAfter ":build"
