@@ -10,7 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class OfflinePlayers extends JavaPlugin { // todo: Maybe create a config manager. Perhaps even enum options with default values.
 
-    Metrics metrics;
     public static OfflinePlayers getInstance() {
         return getPlugin(OfflinePlayers.class);
     }
@@ -24,7 +23,6 @@ public class OfflinePlayers extends JavaPlugin { // todo: Maybe create a config 
 
     @Override
     public void onEnable() {
-        this.metrics = new Metrics(this, 19973);
         Bukkit.getConsoleSender().sendMessage("§aOfflinePlayers starting in version " + getDescription().getVersion());
         this.saveDefaultConfig();
         APIManager.getInstance().delegatedOnEnabled();
@@ -63,7 +61,6 @@ public class OfflinePlayers extends JavaPlugin { // todo: Maybe create a config 
 
     @Override
     public void onDisable() {
-        this.metrics.shutdown();
         CloneManager.getInstance().save();
         if (getServer().getPluginManager().getPlugin("LibsDisguises") != null && getServer().getPluginManager().getPlugin("ProtocolLib") != null)
             CloneManager.getInstance().getOfflinePlayerList().forEach(((uuid, offlinePlayer) -> offlinePlayer.despawnClone())); // todo: Consider having CloneManager handle.
