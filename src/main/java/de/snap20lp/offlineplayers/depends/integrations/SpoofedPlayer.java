@@ -407,7 +407,7 @@ public class SpoofedPlayer implements LivingEntity {
      * @deprecated no need to force since multiple effects of the same type are
      * now supported.
      */
-    @Override
+    @Override @Deprecated
     public boolean addPotionEffect(@NotNull PotionEffect effect, boolean force) {
         return false;
     }
@@ -911,7 +911,7 @@ public class SpoofedPlayer implements LivingEntity {
      * @return Maximum health
      * @deprecated use {@link Attribute#GENERIC_MAX_HEALTH}.
      */
-    @Override
+    @Override @Deprecated
     public double getMaxHealth() {
         return 0;
     }
@@ -928,7 +928,7 @@ public class SpoofedPlayer implements LivingEntity {
      * @param health amount of health to set the maximum to
      * @deprecated use {@link Attribute#GENERIC_MAX_HEALTH}.
      */
-    @Override
+    @Override @Deprecated
     public void setMaxHealth(double health) {
 
     }
@@ -938,7 +938,7 @@ public class SpoofedPlayer implements LivingEntity {
      *
      * @deprecated use {@link Attribute#GENERIC_MAX_HEALTH}.
      */
-    @Override
+    @Override @Deprecated
     public void resetMaxHealth() {
 
     }
@@ -1377,8 +1377,7 @@ public class SpoofedPlayer implements LivingEntity {
      * @deprecated entities may have multiple passengers, use
      * {@link #getPassengers()}
      */
-    @Nullable
-    @Override
+    @Override @Deprecated @Nullable
     public Entity getPassenger() {
         return null;
     }
@@ -1391,7 +1390,7 @@ public class SpoofedPlayer implements LivingEntity {
      * @deprecated entities may have multiple passengers, use
      * {@link #addPassenger(Entity)}
      */
-    @Override
+    @Override @Deprecated
     public boolean setPassenger(@NotNull Entity passenger) {
         return false;
     }
