@@ -16,7 +16,12 @@ OfflinePlayer:
   cloneIsHittable: true #If the clone is damageable.
   cloneHasAI: true #If true the clone is able to be fall down, pushed or knocked back.
   cloneCanProvoke: true #If true the clone can be targeted by mobs.
-  cloneName: "§8§lOffline §7- §c%PLAYER_NAME §e%DESPAWN_TIMER%" #The name of the clone. %PLAYER_NAME will be replaced with the name of the player. %DESPAWN_TIMER% will be replaced with the time until the clone despawns.
+  cloneName: "§8§lOffline §7- §c%PLAYER_NAME% §e%DESPAWN_TIMER%" #The name of the clone. %PLAYER_NAME will be replaced with the name of the player. %DESPAWN_TIMER% will be replaced with the time until the clone despawns.
+  death-messages:
+    personal: "You ({killed}) were just killed by {killer}!"
+    general: "Offline Player {killed} was killed by {killer}!"
+    personal-loc: "You ({killed}) just died at {loc}!"
+    general-loc: "Offline Player {killed} died at {loc}!"
   cloneDe-spawnTimer:
     enabled: false
     timer: 20 #The time in seconds the clone is de-spawned after it is spawned.
@@ -41,3 +46,13 @@ OfflinePlayer:
     # Players in protected WorldGuard will be brought to their 'Bed Spawn > Towny Spawn > (Overworld: 'world') World Spawn'
     is-bed-enabled: true
     destination-world: 'world'
+
+  # These options are related to the graves spawned by OfflinePlayers. Graves are provided by supported plugins.
+  graves:
+    # Whether a specific provider plugin should be searched for.
+    providers:
+      angels-chest: true
+    # This is the duration in seconds before OfflinePlayer graves expire. (GravesX, AngelChest)
+    duration: 600
+    # Duration of grave protection. (GravesX, AngelChest)
+    protection-duration: 0

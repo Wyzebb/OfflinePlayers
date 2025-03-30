@@ -1,6 +1,6 @@
 package de.snap20lp.offlineplayers.depends;
 
-import de.snap20lp.offlineplayers.DepartedDepotIntegration;
+import de.snap20lp.offlineplayers.depends.integrations.AngelChestsIntegration;
 import de.snap20lp.offlineplayers.OfflinePlayers;
 import org.bukkit.Bukkit;
 
@@ -73,11 +73,12 @@ public class APIManager {
             multiverseInventoriesFacade = null;
             OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Multiverse Inventories not found. Plugin will run normally.");
         }
-        // todo: Update to match the APIManager pattern.
-        try {
-            Bukkit.getPluginManager().registerEvents(new DepartedDepotIntegration(), OfflinePlayers.getInstance());
-        } catch (NoClassDefFoundError error) {
-            OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Departed Depots not found. Plugin will run normally.");
+        if (OfflinePlayers.getInstance().getConfig().getBoolean("OfflinePlayer.graves.providers.angels-chest")) {
+            try {
+                Bukkit.getPluginManager().registerEvents(new AngelChestsIntegration(), OfflinePlayers.getInstance());
+            } catch (NoClassDefFoundError error) {
+                OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Angel Chest not found.");
+            }
         }
     }
 

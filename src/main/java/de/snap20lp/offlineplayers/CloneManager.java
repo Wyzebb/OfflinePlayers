@@ -4,6 +4,11 @@ import de.snap20lp.offlineplayers.events.OfflinePlayerDeathEvent;
 import de.snap20lp.offlineplayers.events.OfflinePlayerDespawnEvent;
 import de.snap20lp.offlineplayers.events.OfflinePlayerHitEvent;
 import de.snap20lp.offlineplayers.events.OfflinePlayerSpawnEvent;
+import github.scarsz.discordsrv.DiscordSRV;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
+import github.scarsz.discordsrv.objects.managers.AccountLinkManager;
+import github.scarsz.discordsrv.util.DiscordUtil;
 import me.libraryaddict.disguise.events.UndisguiseEvent;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -49,6 +54,11 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
      * A list of death flavour messages.
      */
     private final List<String> deathFlavours;
+
+    /**
+     * A long that stores the latest time clone data was saved in a millis since epoch.
+     */
+    private long lastCloneDataUpdate = System.currentTimeMillis();
 
     /**
      * Creates a new CloneManager by loading, if present, persistent clones from the drive.
@@ -107,9 +117,25 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
     }
 
     /**
+     * Saves all the current clones to the disc asynchronously.
+     */
+    public void saveAsync () {
+        lastCloneDataUpdate = System.currentTimeMillis();
+//        Bukkit.getScheduler().runTaskAsynchronously(OfflinePlayers.getInstance(), this::save);
+    }
+
+    /**
      * Saves all current clones to the disk.
      */
-    public void save () { // Todo: Might be cleaner to make each save themselves.
+    public void save () {
+        save("./plugins/OfflinePlayers/clones.yml");
+    }
+
+    /**
+     * Saves all current clones to the disk.
+     */
+    public void save (String path) { // Todo: Might be cleaner to make each save themselves.
+        long dataGrabbed = System.currentTimeMillis();
         FileConfiguration save = new YamlConfiguration();
         for (UUID s : getOfflinePlayerList().keySet()) {
             String uuid = s.toString();
@@ -118,9 +144,18 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
             save.set(uuid + ".location", player.getCloneEntity().getLocation());
             save.set(uuid + ".player-xp", player.getPlayerExp());
             save.set(uuid + ".hp", player.getCurrentHP());
+
             ArrayList<ItemStack> inventory = player.getSavedInventoryContents();
+
+            if (inventory.size() > 36) {
+                inventory = new ArrayList<>();
+                while (inventory.size() < 36)
+                    inventory.add(player.getSavedInventoryContents().get(inventory.size()));
+            }
+
             for (ItemStack i : inventory)
-                save.set(uuid + ".inventory." + inventory.indexOf(i), i);
+                if (inventory.indexOf(i) < 36) save.set(uuid + ".inventory." + inventory.indexOf(i), i);
+
             ArrayList<ItemStack> armor = player.getSavedArmorContents();
             for (ItemStack i : armor)
                 save.set(uuid + ".armor." + armor.indexOf(i), i);
@@ -129,10 +164,14 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
             save.set(uuid + ".is-dead", player.isDead());
         }
         try {
-            save.save("./plugins/OfflinePlayers/clones.yml");
+//            if (lastCloneDataUpdate > dataGrabbed) return;
+            save.save(path);
+            OfflinePlayers.getInstance().getLogger().log(Level.INFO, "Saved clone data.");
         } catch (IOException ioException) {
             OfflinePlayers.getInstance().getLogger().log(Level.WARNING, "Failed to save clone data:" + ioException.getMessage());
         }
+        if (OfflinePlayers.getInstance().isEnabled())
+            Bukkit.getScheduler().runTaskLaterAsynchronously(OfflinePlayers.getInstance(), () -> CloneManager.getInstance().save(), 60 * 20 * 10);
     }
 
     @EventHandler
@@ -164,7 +203,7 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
 
             offlinePlayerList.put(newOfflinePlayer.getOfflinePlayer().getUniqueId(), newOfflinePlayer);
             entityOfflinePlayerHashMap.put(newOfflinePlayer.getCloneEntity().getEntityId(), newOfflinePlayer);
-
+            saveAsync();
         }
     }
 
@@ -220,6 +259,7 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
             clone.despawnClone();
 
             offlinePlayerList.remove(playerJoinEvent.getPlayer().getUniqueId());
+            saveAsync();
         }
     }
 
@@ -257,9 +297,10 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
         offlinePlayer.startTimers();
         offlinePlayerList.put(quitPlayer.getUniqueId(), offlinePlayer);
         entityOfflinePlayerHashMap.put(offlinePlayer.getCloneEntity().getEntityId(), offlinePlayer);
+        saveAsync();
     }
 
-    @EventHandler
+    @EventHandler // todo: Figure out why this method existed. It seems relatively vestigial to me currently.
     public void on(UndisguiseEvent undisguiseEvent) {
         if(entityOfflinePlayerHashMap.containsKey(undisguiseEvent.getEntity().getEntityId())) {
             OfflinePlayer offlinePlayer = entityOfflinePlayerHashMap.get(undisguiseEvent.getEntity().getEntityId());
@@ -282,7 +323,7 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
                         offlinePlayer.getAddedItems().add(event.getItemDrop().getItemStack());
                         offlinePlayer.getCloneEntity().getWorld().playSound(offlinePlayer.getCloneEntity().getLocation(), Sound.ENTITY_ITEM_PICKUP, 100,2);
                         event.getItemDrop().remove();
-
+                        saveAsync();
                     }, 50L);
                 }
             });
@@ -345,17 +386,46 @@ public class CloneManager implements Listener { // todo: Perhaps refactor events
 
             }
             Player killer = event.getEntity().getKiller();
+            AccountLinkManager manager = DiscordSRV.getPlugin().getAccountLinkManager();
+            String discordId = manager.getDiscordId(offlinePlayer.getOfflinePlayer().getUniqueId());
+            Member guildMember = null;
+            if (discordId != null) {
+                Guild mainGuild = DiscordSRV.getPlugin().getMainGuild();
+                guildMember = mainGuild.getMemberById(discordId);
+            }
             if (killer != null) {
-                Random rand = new Random();
-                String message = deathFlavours.get(rand.nextInt(deathFlavours.size()));
-                Bukkit.broadcastMessage(ChatColor.RED + "@" + offlinePlayer.getOfflinePlayer().getName()  + message + "@" + killer.getName());
+                String personalDeathMessage = OfflinePlayers.getInstance().getConfig().getString("OfflinePlayer.death-messages.personal", "You ({killed}) were just killed by {killer}!");
+                personalDeathMessage = personalDeathMessage.replace("{killed}", offlinePlayer.getOfflinePlayer().getName());
+                personalDeathMessage = personalDeathMessage.replace("{killer}", killer.getName());
+
+                String deathMessage = OfflinePlayers.getInstance().getConfig().getString("OfflinePlayer.death-messages.general", "Offline Player {killed} was killed by {killer}!");
+                deathMessage = deathMessage.replace("{killed}", offlinePlayer.getOfflinePlayer().getName());
+                deathMessage = deathMessage.replace("{killer}", killer.getName());
+
+                Bukkit.broadcastMessage(ChatColor.RED + deathMessage);
+                if (guildMember != null)
+                    DiscordUtil.privateMessage(guildMember.getUser(), personalDeathMessage);
             } else {
-                Bukkit.broadcastMessage(ChatColor.RED + "@" + offlinePlayer.getOfflinePlayer().getName() + " has died at " + humanReadableLocation(event.getEntity().getLocation()) + ".");
+                String personalDeathMessage = OfflinePlayers.getInstance().getConfig().getString("OfflinePlayer.death-messages.personal-loc", "You ({killed}) just died at {loc}!");
+                personalDeathMessage = personalDeathMessage.replace("{killed}", offlinePlayer.getOfflinePlayer().getName());
+                personalDeathMessage = personalDeathMessage.replace("{loc}", humanReadableLocation(event.getEntity().getLocation()));
+
+                String deathMessage = OfflinePlayers.getInstance().getConfig().getString("OfflinePlayer.death-messages.general-loc", "Offline Player {killed} died at {loc}!");
+                deathMessage = deathMessage.replace("{killed}", offlinePlayer.getOfflinePlayer().getName());
+                deathMessage = deathMessage.replace("{loc}", humanReadableLocation(event.getEntity().getLocation()));
+
+                Bukkit.broadcastMessage(ChatColor.RED + deathMessage);
+                if (guildMember != null)
+                    DiscordUtil.privateMessage(guildMember.getUser(), personalDeathMessage);
             }
             event.setDroppedExp(offlinePlayer.getPlayerExp());
             offlinePlayer.setHidden(true);
             offlinePlayer.despawnClone();
             offlinePlayer.setDead(true);
+            final OfflinePlayer staticOffline = offlinePlayer;
+            Bukkit.getScheduler().runTask(OfflinePlayers.getInstance(),
+                    () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "clear " + staticOffline.getOfflinePlayer().getName()));
+            saveAsync();
         }
     }
 

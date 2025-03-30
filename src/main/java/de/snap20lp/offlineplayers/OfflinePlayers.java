@@ -1,5 +1,6 @@
 package de.snap20lp.offlineplayers;
 
+import de.snap20lp.offlineplayers.commands.OfflinePlayerCommand;
 import de.snap20lp.offlineplayers.depends.APIManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -56,6 +57,8 @@ public class OfflinePlayers extends JavaPlugin { // todo: Maybe create a config 
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+        new OfflinePlayerCommand();
+        Bukkit.getScheduler().runTaskLaterAsynchronously(this, () -> CloneManager.getInstance().save(), 60 * 20 * 10);
     }
 
     @Override
