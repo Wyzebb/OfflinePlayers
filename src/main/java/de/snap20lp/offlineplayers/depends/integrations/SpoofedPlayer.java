@@ -1,23 +1,16 @@
 package de.snap20lp.offlineplayers.depends.integrations;
 
 import org.bukkit.*;
-import org.bukkit.advancement.Advancement;
-import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.PistonMoveReaction;
-import org.bukkit.block.Sign;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.conversations.Conversation;
-import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.entity.*;
 import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.*;
-import org.bukkit.map.MapView;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
@@ -26,15 +19,12 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.profile.PlayerProfile;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.InetSocketAddress;
 import java.util.*;
 
 public class SpoofedPlayer implements LivingEntity {
@@ -1619,7 +1609,6 @@ public class SpoofedPlayer implements LivingEntity {
 
     /**
      * Sets whether the entity has a team colored (default: white) glow.
-     *
      * <b>nb: this refers to the 'Glowing' entity property, not whether a
      * glowing potion effect is applied</b>
      *
@@ -1632,7 +1621,6 @@ public class SpoofedPlayer implements LivingEntity {
 
     /**
      * Gets whether the entity is glowing or not.
-     *
      * <b>nb: this refers to the 'Glowing' entity property, not whether a
      * glowing potion effect is applied</b>
      *
@@ -1798,7 +1786,6 @@ public class SpoofedPlayer implements LivingEntity {
 
     /**
      * Gets the entity's current pose.
-     *
      * <b>Note that the pose is only updated at the end of a tick, so may be
      * inconsistent with other methods. eg {@link Player#isSneaking()} being
      * true does not imply the current pose will be {@link Pose#SNEAKING}</b>
