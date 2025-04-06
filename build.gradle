@@ -47,7 +47,7 @@ repositories {
 
 dependencies {
     implementation 'org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT'
-    implementation 'LibsDisguises:LibsDisguises:10.0.44-SNAPSHOT'
+    implementation group: 'me.libraryaddict.disguises', name: 'libsdisguises', version: '11.0.0'
     implementation 'com.github.retrooper.packetevents:spigot:2.3.0'
     implementation 'com.google.code.gson:gson:2.10.1'
     compileOnly 'com.discordsrv:discordsrv:1.28.0'
