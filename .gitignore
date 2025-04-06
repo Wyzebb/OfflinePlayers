@@ -10,10 +10,6 @@
 .idea/misc.xml
 .idea/vcs.xml
 .idea/workspace.xml
-gradle/wrapper/gradle-wrapper.jar
-gradle/wrapper/gradle-wrapper.properties
-gradlew
-gradlew.bat
 testing_script.sh
 .gitignore
 .idea/
